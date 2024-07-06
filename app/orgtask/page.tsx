@@ -5,13 +5,18 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { GoogleGenerativeAI } from '@google/generative-ai'
+import { Checkbox } from '@/components/ui/checkbox'
+import { CheckCircle2 } from 'lucide-react'
+
 
 export default function OrganisationTask() {
-  const [task, setTask] = useState('')
-  const [numTasks, setNumTasks] = useState(5)
-  const [suggestedTasks, setSuggestedTasks] = useState<string[]>([])
-  const [isLoading, setIsLoading] = useState(false)
-
+    const [task, setTask] = useState('')
+    const [numTasks, setNumTasks] = useState(5)
+    const [suggestedTasks, setSuggestedTasks] = useState<Array<{ text: string; completed: boolean }>>([])
+    const [isLoading, setIsLoading] = useState(false)
+    const [customTask, setCustomTask] = useState('')
+  
+  
   const generateAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY!)
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -51,13 +56,30 @@ export default function OrganisationTask() {
       const response = await result.response
       const text = response.text()
 
-      const tasks = text.split('\n').filter(t => t.trim() !== '').map(t => t.replace(/^\d+\.\s*/, ''))
+      const tasks = text.split('\n').filter(t => t.trim() !== '').map(t => ({
+        text: t.replace(/^\d+\.\s*/, ''),
+        completed: false
+      }))
       setSuggestedTasks(tasks)
     } catch (error) {
       console.error('Error generating tasks:', error)
     } finally {
       setIsLoading(false)
     }
+  }
+
+
+  const handleAddCustomTask = () => {
+    if (customTask.trim() !== '') {
+      setSuggestedTasks([...suggestedTasks, { text: customTask, completed: false }])
+      setCustomTask('')
+    }
+  }
+
+  const toggleTaskCompletion = (index: number) => {
+    const updatedTasks = [...suggestedTasks]
+    updatedTasks[index].completed = !updatedTasks[index].completed
+    setSuggestedTasks(updatedTasks)
   }
 
   return (
@@ -95,18 +117,42 @@ export default function OrganisationTask() {
           </form>
         </CardContent>
       </Card>
-
       {suggestedTasks.length > 0 && (
         <Card className="mt-8 w-full max-w-md mx-auto">
           <CardHeader>
             <CardTitle>Suggested Subtasks</CardTitle>
           </CardHeader>
           <CardContent>
-            <ul className="list-disc pl-5 space-y-2">
+            <ul className="space-y-2">
               {suggestedTasks.map((subtask, index) => (
-                <li key={index}>{subtask}</li>
+                <li key={index} className="flex items-center space-x-2">
+                  <Checkbox
+                    id={`task-${index}`}
+                    checked={subtask.completed}
+                    onCheckedChange={() => toggleTaskCompletion(index)}
+                  />
+                  <label
+                    htmlFor={`task-${index}`}
+                    className={`flex-grow ${subtask.completed ? 'line-through text-gray-500' : ''}`}
+                  >
+                    {subtask.text}
+                  </label>
+                  {subtask.completed && <CheckCircle2 className="text-green-500" size={16} />}
+                </li>
               ))}
             </ul>
+            <div className="mt-4 space-y-2">
+              <Input
+                type="text"
+                placeholder="Add a custom task"
+                value={customTask}
+                onChange={(e) => setCustomTask(e.target.value)}
+                className="w-full"
+              />
+              <Button onClick={handleAddCustomTask} className="w-full">
+                Add Custom Task
+              </Button>
+            </div>
           </CardContent>
         </Card>
       )}
