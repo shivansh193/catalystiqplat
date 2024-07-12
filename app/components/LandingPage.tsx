@@ -23,6 +23,7 @@ export default function Home() {
   const handleSignUp = (userData: any) => {
     localStorage.setItem('user', JSON.stringify(userData));
     setIsLoggedIn(true);
+    router.push('/clientPage');
   };
 
   const handleClientPlatClick = () => {
