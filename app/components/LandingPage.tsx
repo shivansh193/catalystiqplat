@@ -1,26 +1,36 @@
+// pages/index.tsx
 "use client";
 
 import Head from 'next/head';
 import { useState, useEffect } from 'react';
-import SignUpForm from './SignIn';
+import Modal from '../components/Modal';
+import SignUpForm from './SignUp';
+import { useRouter } from 'next/navigation';
+
 export default function Home() {
   const [isClientPlat, setIsClientPlat] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const router = useRouter();
 
   useEffect(() => {
     const user = localStorage.getItem('user');
     if (user) {
       setIsLoggedIn(true);
+      router.push('/clientPage');
     }
-  }, []);
+  }, [router]);
 
-  const handleSignUp = (userData) => {
+  const handleSignUp = (userData: any) => {
     localStorage.setItem('user', JSON.stringify(userData));
     setIsLoggedIn(true);
   };
 
   const handleClientPlatClick = () => {
     setIsClientPlat(true);
+  };
+
+  const handleCloseModal = () => {
+    setIsClientPlat(false);
   };
 
   return (
@@ -36,8 +46,6 @@ export default function Home() {
           <h1 className="text-4xl font-bold mb-8 text-gray-900 dark:text-gray-100">
             Welcome Back!
           </h1>
-        ) : isClientPlat ? (
-          <SignUpForm onSignUp={handleSignUp} />
         ) : (
           <>
             <h1 className="text-4xl font-bold mb-8 text-gray-900 dark:text-gray-100">
@@ -60,6 +68,10 @@ export default function Home() {
           </>
         )}
       </main>
+
+      <Modal isOpen={isClientPlat} onClose={handleCloseModal}>
+        <SignUpForm onSignUp={handleSignUp} />
+      </Modal>
 
       <footer className="flex items-center justify-center w-full h-16 border-t mt-8 text-gray-800 dark:text-gray-200">
         <p>© 2024 Our Platform. All rights reserved.</p>

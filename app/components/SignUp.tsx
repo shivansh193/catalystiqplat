@@ -1,14 +1,20 @@
+// components/SignUpForm.tsx
 "use client";
-import { useState } from 'react';
 
-export default function SignUpForm({ onSignUp }) {
+import { useState } from 'react';
+import { useRouter } from 'next/navigation';
+import { registerWithEmail, signInWithGoogle } from '../../lib/firebase/auth';
+
+export default function SignUpForm({ onSignUp }: any) {
   const [formData, setFormData] = useState({
     username: '',
     email: '',
     password: '',
   });
 
-  const handleChange = (e) => {
+  const router = useRouter();
+
+  const handleChange = (e: any) => {
     const { name, value } = e.target;
     setFormData({
       ...formData,
@@ -16,10 +22,25 @@ export default function SignUpForm({ onSignUp }) {
     });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e: any) => {
     e.preventDefault();
-    // Handle form submission
-    onSignUp(formData);
+    try {
+      await registerWithEmail(formData.email, formData.password);
+      onSignUp(formData);
+      router.push('/client-page'); // Navigate to client page on success
+    } catch (error) {
+      console.error("Error signing up", error);
+    }
+  };
+
+  const handleGoogleSignIn = async () => {
+    try {
+      await signInWithGoogle();
+      onSignUp(formData);
+      router.push('/client-page'); // Navigate to client page on success
+    } catch (error) {
+      console.error("Error signing in with Google", error);
+    }
   };
 
   return (
@@ -72,6 +93,15 @@ export default function SignUpForm({ onSignUp }) {
           type="submit"
         >
           Sign Up
+        </button>
+      </div>
+      <div className="flex items-center justify-between mt-4">
+        <button
+          className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+          type="button"
+          onClick={handleGoogleSignIn}
+        >
+          Sign in with Google
         </button>
       </div>
     </form>
