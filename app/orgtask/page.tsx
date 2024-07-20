@@ -1,161 +1,73 @@
 'use client'
+import { useState } from "react";
+import DescriptionStep from "../components/descriptionStep";
+import SubTaskGen from "../components/subTaskGen";
+import { Dispatch, SetStateAction } from "react";
 
-import { useState } from 'react'
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { GoogleGenerativeAI } from '@google/generative-ai'
-import { Checkbox } from '@/components/ui/checkbox'
-import { CheckCircle2 } from 'lucide-react'
+interface FormData {
+  taskName: string;
+  subtasks: never[];
+  description: string;
+  budget: string;
+  deadline: string;
+}
 
+interface StepProps {
+  formData: FormData;
+  setFormData: Dispatch<SetStateAction<FormData>>;
+}
 
-export default function OrganisationTask() {
-    const [task, setTask] = useState('')
-    const [numTasks, setNumTasks] = useState(5)
-    const [suggestedTasks, setSuggestedTasks] = useState<Array<{ text: string; completed: boolean }>>([])
-    const [isLoading, setIsLoading] = useState(false)
-    const [customTask, setCustomTask] = useState('')
-  
-  
-  const generateAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY!)
+export default function OrgTask() {
+  const [step, setStep] = useState(1);
+  const [formData, setFormData] = useState({
+    taskName: '',
+    subtasks: [],
+    description: '',
+    budget: '',
+    deadline: ''
+  });
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-    setIsLoading(true)
+  const handleSubmit = () => {
+    // Implement your submit logic here
+    console.log(formData);
+  };
 
-    try {
-      const model = generateAI.getGenerativeModel({ model: 'gemini-pro' })
-
-      const prompt = `You are an expert hiring manager tasked with creating an assessment for a candidate. Given the following main task for an organization: "${task}"
-
-      Generate a list of ${numTasks} smaller, essential assessment tasks that would help measure a candidate's capability for the main task. These tasks should be:
-      
-      1. Concise and specific
-      2. Independent of each other
-      3. Directly utilizing the essential skills needed for the main task
-      4. Preferably unrelated to the main task if they are industry standard assessments
-      5. Designed to be completed remotely
-      
-      For each task, include an estimated time limit and a difficulty level (Easy, Medium, Hard).
-      
-      Format your response as follows:
-      - Present each task on a new line.
-      - Do not use any markdown, bold text, or bullet points.
-      - Separate the task description, difficulty level, and time limit with commas.
-      - Do not include any additional explanations, justifications, or introductory text.
-      
-      Example output format:
-      [Task 1], [Difficulty], [Time]
-      [Task 2], [Difficulty], [Time]
-      [Task 3], [Difficulty], [Time]
-      ...and so on.
-      
-      Provide ONLY the tasks, without any introductory text or key skills description.`
-
-      const result = await model.generateContent(prompt)
-      const response = await result.response
-      const text = response.text()
-
-      const tasks = text.split('\n').filter(t => t.trim() !== '').map(t => ({
-        text: t.replace(/^\d+\.\s*/, ''),
-        completed: false
-      }))
-      setSuggestedTasks(tasks)
-    } catch (error) {
-      console.error('Error generating tasks:', error)
-    } finally {
-      setIsLoading(false)
-    }
-  }
-
-
-  const handleAddCustomTask = () => {
-    if (customTask.trim() !== '') {
-      setSuggestedTasks([...suggestedTasks, { text: customTask, completed: false }])
-      setCustomTask('')
-    }
-  }
-
-  const toggleTaskCompletion = (index: number) => {
-    const updatedTasks = [...suggestedTasks]
-    updatedTasks[index].completed = !updatedTasks[index].completed
-    setSuggestedTasks(updatedTasks)
+  function Navigation({step, setStep, formData}: any) {
+    return (
+      <div className="flex justify-between mt-4">
+        {step > 1 && (
+          <button
+            onClick={() => setStep(step - 1)}
+            className="px-4 py-2 bg-gray-200 rounded"
+          >
+            Previous
+          </button>
+        )}
+        {step < 2 ? (
+          <button
+            onClick={() => setStep(step + 1)}
+            className="px-4 py-2 bg-blue-500 text-white rounded"
+          >
+            Next
+          </button>
+        ) : (
+          <button
+            onClick={handleSubmit}
+            className="px-4 py-2 bg-green-500 text-white rounded"
+          >
+            Submit
+          </button>
+        )}
+      </div>
+    );
   }
 
   return (
     <div className="container mx-auto p-4">
-      <h1 className="text-2xl font-bold mb-4">Organisation Task</h1>
-      <Card className="w-full max-w-md mx-auto">
-        <CardHeader>
-          <CardTitle>Generate Subtasks</CardTitle>
-          <CardDescription>Enter a task and choose the number of subtasks to generate</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <form onSubmit={handleSubmit} className="space-y-4">
-            <Input
-              type="text"
-              placeholder="Enter organisation task"
-              value={task}
-              onChange={(e) => setTask(e.target.value)}
-              className="w-full"
-            />
-            <div className="flex items-center space-x-2">
-              <label htmlFor="numTasks" className="text-sm">Number of subtasks:</label>
-              <Input
-                id="numTasks"
-                type="number"
-                min="1"
-                max="10"
-                value={numTasks}
-                onChange={(e) => setNumTasks(parseInt(e.target.value))}
-                className="w-20"
-              />
-            </div>
-            <Button type="submit" className="w-full" disabled={isLoading}>
-              {isLoading ? 'Generating...' : 'Generate Subtasks'}
-            </Button>
-          </form>
-        </CardContent>
-      </Card>
-      {suggestedTasks.length > 0 && (
-        <Card className="mt-8 w-full max-w-md mx-auto">
-          <CardHeader>
-            <CardTitle>Suggested Subtasks</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <ul className="space-y-2">
-              {suggestedTasks.map((subtask, index) => (
-                <li key={index} className="flex items-center space-x-2">
-                  <Checkbox
-                    id={`task-${index}`}
-                    checked={subtask.completed}
-                    onCheckedChange={() => toggleTaskCompletion(index)}
-                  />
-                  <label
-                    htmlFor={`task-${index}`}
-                    className={`flex-grow ${subtask.completed ? 'line-through text-gray-500' : ''}`}
-                  >
-                    {subtask.text}
-                  </label>
-                  {subtask.completed && <CheckCircle2 className="text-green-500" size={16} />}
-                </li>
-              ))}
-            </ul>
-            <div className="mt-4 space-y-2">
-              <Input
-                type="text"
-                placeholder="Add a custom task"
-                value={customTask}
-                onChange={(e) => setCustomTask(e.target.value)}
-                className="w-full"
-              />
-              <Button onClick={handleAddCustomTask} className="w-full">
-                Add Custom Task
-              </Button>
-            </div>
-          </CardContent>
-        </Card>
-      )}
+      <h1 className="text-2xl font-bold mb-4">Organization Task</h1>
+      {step === 1 && <SubTaskGen formData={formData} setFormData={setFormData} />}
+      {step === 2 && <DescriptionStep formData={formData} setFormData={setFormData} />}
+      <Navigation step={step} setStep={setStep} formData={formData} />
     </div>
-  )
+  );
 }

@@ -27,7 +27,7 @@ export default function SignUpForm({ onSignUp }: any) {
     try {
       await registerWithEmail(formData.email, formData.password);
       onSignUp(formData);
-      router.push('/client-page'); // Navigate to client page on success
+      router.push('/clientPage'); // Navigate to client page on success
     } catch (error) {
       console.error("Error signing up", error);
     }
@@ -37,7 +37,7 @@ export default function SignUpForm({ onSignUp }: any) {
     try {
       await signInWithGoogle();
       onSignUp(formData);
-      router.push('/client-page'); // Navigate to client page on success
+      router.push('/clientPage'); // Navigate to client page on success
     } catch (error) {
       console.error("Error signing in with Google", error);
     }
