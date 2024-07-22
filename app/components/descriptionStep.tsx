@@ -5,6 +5,8 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { RadioGroup, RadioGroupItem } from '@/components/ui/Radio'
+import { useFirestore } from '../../lib/hooks/useFirestore'
+import { useAuth } from '../../lib/hooks/useAuth'
 
 const workTypes = [
   { name: 'Marketing', color: 'bg-blue-500' },
@@ -16,7 +18,25 @@ const workTypes = [
 
 export default function DescriptionStep({ formData, setFormData }: { formData: any, setFormData: (data: any) => void }) {
   const [selectedWorkTypes, setSelectedWorkTypes] = useState<string[]>(formData.workTypes || []);
-
+  const {handleSaveTask, loading, error}=useFirestore();
+  const { user } = useAuth();
+  
+  const handleSubmit=async(e: any)=>{
+    e.preventDefault();
+    if(!user){
+      console.error("No user logged in")
+      return;
+    }
+    const taskData={
+      ...formData,
+      userId: user.uid,
+      createdAt: new Date()
+    }
+    const taskId=await handleSaveTask(taskData);
+    if(taskId){
+      console.log("Task saved successfully with ID:", taskId);
+    }
+  }
   const toggleWorkType = (workType: string) => {
     setSelectedWorkTypes(prev => 
       prev.includes(workType) 
@@ -27,6 +47,7 @@ export default function DescriptionStep({ formData, setFormData }: { formData: a
   }
 
   return (
+    <form onSubmit={handleSubmit}>
     <div className="space-y-4">
       <Input
         type="text"
@@ -82,5 +103,10 @@ export default function DescriptionStep({ formData, setFormData }: { formData: a
         </RadioGroup>
       </div>
     </div>
+    <Button type="submit" disabled={loading}>
+        {loading ? 'Saving...' : 'Save Task'}
+      </Button>
+      {error && <p className="text-red-500">{error}</p>}
+    </form>
   );
 }
