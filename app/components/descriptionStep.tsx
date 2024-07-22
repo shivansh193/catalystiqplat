@@ -38,12 +38,11 @@ export default function DescriptionStep({ formData, setFormData }: { formData: a
     }
   }
   const toggleWorkType = (workType: string) => {
-    setSelectedWorkTypes(prev => 
-      prev.includes(workType) 
-        ? prev.filter(type => type !== workType)
-        : [...prev, workType]
-    );
-    setFormData({...formData, workTypes: selectedWorkTypes});
+    const updatedWorkTypes = selectedWorkTypes.includes(workType) 
+      ? selectedWorkTypes.filter(type => type !== workType)
+      : [...selectedWorkTypes, workType];
+    setSelectedWorkTypes(updatedWorkTypes);
+    setFormData({...formData, workTypes: updatedWorkTypes});
   }
 
   return (
@@ -87,21 +86,20 @@ export default function DescriptionStep({ formData, setFormData }: { formData: a
       </div>
       
       <div className="space-y-2">
-        <Label>Task Type:</Label>
-        <RadioGroup 
-          value={formData.isAIOnly ? "ai" : "regular"} 
-          onValueChange={(value: any) => setFormData({...formData, isAIOnly: value === "ai"})}
-        >
-          <div className="flex items-center space-x-2">
-            <RadioGroupItem value="regular" id="regular" />
-            <Label htmlFor="regular">Regular Task</Label>
-          </div>
-          <div className="flex items-center space-x-2">
-            <RadioGroupItem value="ai" id="ai" />
-            <Label htmlFor="ai">AI-Only Task (Prompting)</Label>
-          </div>
-        </RadioGroup>
-      </div>
+  <Label>Task Type:</Label>
+  <RadioGroup 
+    value={formData.isAIOnly ? "ai" : "regular"} 
+    onValueChange={(value: "ai" | "regular") => setFormData({...formData, isAIOnly: value === "ai"})}
+  >
+    <RadioGroupItem value="regular" id="regular">
+      Regular Task
+    </RadioGroupItem>
+    <RadioGroupItem value="ai" id="ai">
+      AI-Only Task (Prompting)
+    </RadioGroupItem>
+  </RadioGroup>
+</div>
+
     </div>
     <Button type="submit" disabled={loading}>
         {loading ? 'Saving...' : 'Save Task'}
