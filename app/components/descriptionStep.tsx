@@ -9,6 +9,7 @@ import { useFirestore } from '../../lib/hooks/useFirestore'
 import { useAuth } from '../../lib/hooks/useAuth'
 import { User } from 'firebase/auth';
 
+
 const workTypes = [
   { name: 'Marketing', color: 'bg-blue-500' },
   { name: 'Design', color: 'bg-green-500' },
@@ -19,22 +20,29 @@ const workTypes = [
 
 export default function DescriptionStep({ formData, setFormData }: { formData: any, setFormData: (data: any) => void }) {
   const [selectedWorkTypes, setSelectedWorkTypes] = useState<string[]>(formData.workTypes || []);
-  const {handleSaveTask, handleGetTasks, loading, error} = useFirestore();  const { user } = useAuth() as { user: User | null };  
+  const { handleSaveTask, loading, error } = useFirestore();
+  const { user } = useAuth() as { user: User | null };  
 
-  const handleSubmit=async(e: any)=>{
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if(!user){
+    if (!user) {
       console.error("No user logged in")
       return;
     }
-    const taskData={
+    const taskData = {
       ...formData,
       userId: user.uid,
       createdAt: new Date()
     }
-    const taskId=await handleSaveTask(taskData);
-    if(taskId){
-      console.log("Task saved successfully with ID:", taskId);
+    try {
+      const taskId = await handleSaveTask(taskData);
+      if (taskId) {
+        console.log("Task saved successfully with ID:", taskId);
+        // You might want to add some success feedback to the user here
+      }
+    } catch (error) {
+      console.error("Error saving task:", error);
+      // You might want to add some error feedback to the user here
     }
   }
   const toggleWorkType = (workType: string) => {

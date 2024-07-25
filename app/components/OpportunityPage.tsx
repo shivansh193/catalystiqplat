@@ -62,13 +62,13 @@ export default function OpportunityPage() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {opportunities.map((opportunity) => (
             <OpportunityCard
-              key={opportunity.id}
-              taskName={opportunity.taskName}
-              description={opportunity.description}
-              budget={opportunity.budget}
+              id={opportunity.id}
+              role={opportunity.taskName}
+              scope={opportunity.description}
+              stipend={opportunity.budget}
               deadline={opportunity.deadline}
-              badges={opportunity.workTypes} // Pass the badges (workTypes) if needed
-              subtasks={opportunity.subtasks} // Pass the filtered subtasks if needed
+              badges={opportunity.workTypes}
+              
             />
           ))}
         </div>
