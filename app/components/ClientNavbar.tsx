@@ -2,13 +2,15 @@
 import { useEffect, useState } from 'react';
 import { getAuth } from 'firebase/auth';
 import app from '../../lib/firebase/initFirebase';
+import { FirebaseApp } from 'firebase/app';
+import { User } from 'firebase/auth';
+
 
 const ClientNavbar = () => {
-  const [user, setUser] = useState(null);
-  const [loading, setLoading] = useState(true);
+  const [user, setUser] = useState<User | null>(null);  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const auth = getAuth(app);
+    const auth = getAuth(app as FirebaseApp);
     console.log("Current user on load:", auth.currentUser);
 
     const unsubscribe = auth.onAuthStateChanged((user) => {

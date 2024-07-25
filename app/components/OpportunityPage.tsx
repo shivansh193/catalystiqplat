@@ -1,7 +1,10 @@
-"use client"
-import { useEffect, useState } from 'react';
+
+"use client";
+
+import { useEffect, useState, useCallback } from 'react';
 import OpportunityCard from '../components/OpportunityCard';
 import { useFirestore } from '../../lib/hooks/useFirestore';
+import { useAuth } from '@/lib/hooks/useAuth';
 
 interface Subtask {
   completed: boolean;
@@ -23,29 +26,31 @@ interface Opportunity {
 export default function OpportunityPage() {
   const [opportunities, setOpportunities] = useState<Opportunity[]>([]);
   const { handleGetTasks, loading, error } = useFirestore();
-  const userId = 'exampleUserId'; // Replace with the actual user ID if available
+  const { user } = useAuth();
+  const userId = user?.uid;
+
+  const fetchOpportunities = useCallback(async () => {
+    try {
+      const tasks = await handleGetTasks(userId);
+      const opportunitiesList = tasks.map((task: any) => {
+        const subtasks = task.subtasks.filter((subtask: Subtask) => subtask.completed);
+        return {
+          id: task.id,
+          ...task,
+          subtasks,
+          createdAt: task.createdAt.toDate() // Ensure `createdAt` is a Firestore Timestamp
+        };
+      }) as Opportunity[];
+      setOpportunities(opportunitiesList);
+      console.log(opportunitiesList);
+    } catch (error) {
+      console.error('Error fetching opportunities:', error);
+    }
+  }, [handleGetTasks, userId]);
 
   useEffect(() => {
-    const fetchOpportunities = async () => {
-      try {
-        const tasks = await handleGetTasks(userId);
-        const opportunitiesList = tasks.map((task: any) => {
-          const subtasks = task.subtasks.filter((subtask: Subtask) => subtask.completed);
-          return {
-            id: task.id,
-            ...task,
-            subtasks,
-            createdAt: task.createdAt.toDate() // Ensure `createdAt` is a Firestore Timestamp
-          };
-        }) as Opportunity[];
-        setOpportunities(opportunitiesList);
-      } catch (error) {
-        console.error('Error fetching opportunities:', error);
-      }
-    };
-
     fetchOpportunities();
-  }, [handleGetTasks, userId]);
+  }, [fetchOpportunities]);
 
   if (loading) return <div>Loading...</div>;
   if (error) return <div>Error: {error}</div>;

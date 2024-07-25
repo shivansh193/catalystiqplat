@@ -7,6 +7,7 @@ import { Label } from '@/components/ui/label'
 import { RadioGroup, RadioGroupItem } from '@/components/ui/Radio'
 import { useFirestore } from '../../lib/hooks/useFirestore'
 import { useAuth } from '../../lib/hooks/useAuth'
+import { User } from 'firebase/auth';
 
 const workTypes = [
   { name: 'Marketing', color: 'bg-blue-500' },
@@ -18,9 +19,8 @@ const workTypes = [
 
 export default function DescriptionStep({ formData, setFormData }: { formData: any, setFormData: (data: any) => void }) {
   const [selectedWorkTypes, setSelectedWorkTypes] = useState<string[]>(formData.workTypes || []);
-  const {handleSaveTask, loading, error}=useFirestore();
-  const { user } = useAuth();
-  
+  const {handleSaveTask, handleGetTasks, loading, error} = useFirestore();  const { user } = useAuth() as { user: User | null };  
+
   const handleSubmit=async(e: any)=>{
     e.preventDefault();
     if(!user){
