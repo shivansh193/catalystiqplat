@@ -3,14 +3,14 @@
 import { useState } from 'react';
 import { registerWithEmail, signInWithGoogle } from '../../lib/firebase/auth';
 
-export default function SignUpForm({ onSignUp }) {
+export default function SignUpForm({ onSignUp }: { onSignUp: (formData: any) => void }) {
   const [formData, setFormData] = useState({
     username: '',
     email: '',
     password: '',
   });
 
-  const handleChange = (e) => {
+  const handleChange = (e: any) => {
     const { name, value } = e.target;
     setFormData({
       ...formData,
@@ -18,7 +18,7 @@ export default function SignUpForm({ onSignUp }) {
     });
   };
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e: any) => {
     e.preventDefault();
     try {
       await registerWithEmail(formData.email, formData.password);
