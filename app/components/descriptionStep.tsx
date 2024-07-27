@@ -109,7 +109,7 @@ export default function DescriptionStep({ formData, setFormData }: { formData: a
 </div>
 
     </div>
-    <Button type="submit" disabled={loading} onClick={handleSubmit}>
+    <Button type="submit" disabled={loading} >
         {loading ? 'Saving...' : 'Save Task'}
       </Button>
       {error && <p className="text-red-500">{error}</p>}

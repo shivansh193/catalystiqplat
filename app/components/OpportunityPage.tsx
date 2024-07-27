@@ -5,6 +5,7 @@ import { useEffect, useState, useCallback } from 'react';
 import OpportunityCard from '../components/OpportunityCard';
 import { useFirestore } from '../../lib/hooks/useFirestore';
 import { useAuth } from '@/lib/hooks/useAuth';
+import { User } from 'firebase/auth';
 
 interface Subtask {
   completed: boolean;
@@ -26,8 +27,8 @@ interface Opportunity {
 export default function OpportunityPage() {
   const [opportunities, setOpportunities] = useState<Opportunity[]>([]);
   const { handleGetTasks, loading, error } = useFirestore();
-  const { user } = useAuth();
-  const userId = user?.uid;
+  const { user } = useAuth() as { user: User | null };
+    const userId = user?.uid;
 
   const fetchOpportunities = useCallback(async () => {
     try {
