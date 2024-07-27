@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useEffect, useState, useCallback } from 'react';
@@ -28,26 +27,23 @@ export default function OpportunityPage() {
   const [opportunities, setOpportunities] = useState<Opportunity[]>([]);
   const { handleGetTasks, loading, error } = useFirestore();
   const { user } = useAuth() as { user: User | null };
-    const userId = user?.uid;
-
+  
   const fetchOpportunities = useCallback(async () => {
     try {
-      const tasks = await handleGetTasks(userId);
+      const tasks = await handleGetTasks();
       const opportunitiesList = tasks.map((task: any) => {
-        const subtasks = task.subtasks.filter((subtask: Subtask) => subtask.completed);
         return {
           id: task.id,
           ...task,
-          subtasks,
+          subtasks: [], // Do not show subtasks
           createdAt: task.createdAt.toDate() // Ensure `createdAt` is a Firestore Timestamp
         };
       }) as Opportunity[];
       setOpportunities(opportunitiesList);
-      console.log(opportunitiesList);
     } catch (error) {
       console.error('Error fetching opportunities:', error);
     }
-  }, [handleGetTasks, userId]);
+  }, [handleGetTasks]);
 
   useEffect(() => {
     fetchOpportunities();
@@ -63,13 +59,13 @@ export default function OpportunityPage() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {opportunities.map((opportunity) => (
             <OpportunityCard
+              key={opportunity.id}
               id={opportunity.id}
               role={opportunity.taskName}
               scope={opportunity.description}
               stipend={opportunity.budget}
               deadline={opportunity.deadline}
               badges={opportunity.workTypes}
-              
             />
           ))}
         </div>
