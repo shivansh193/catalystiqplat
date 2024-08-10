@@ -2,13 +2,13 @@
 import ClientNavbar from '@/app/components/ClientNavbar';
 import OpportunityApply from './OppApply';
 
-const Home = () => {
+const ApplyPage = ({ params }: { params: { id: string } }) => {
   return (
     <div>
       <ClientNavbar />
-      <OpportunityApply />
+      <OpportunityApply params={params} />
     </div>
   );
 };
 
-export default Home;
+export default ApplyPage;
