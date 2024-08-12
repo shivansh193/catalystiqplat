@@ -1,16 +1,15 @@
-// Your component file where you use Firebase
 "use client";
 import { useState } from 'react';
 import { registerWithEmail, signInWithGoogle } from '../../lib/firebase/auth';
 
-export default function SignUpForm({ onSignUp }) {
+export default function SignUpPage() {
   const [formData, setFormData] = useState({
     username: '',
     email: '',
     password: '',
   });
 
-  const handleChange = (e) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setFormData({
       ...formData,
@@ -18,11 +17,12 @@ export default function SignUpForm({ onSignUp }) {
     });
   };
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
       await registerWithEmail(formData.email, formData.password);
-      onSignUp(formData);
+      // Handle successful sign up (e.g., redirect or show a success message)
+      console.log("User signed up successfully");
     } catch (error) {
       console.error("Error signing up", error);
     }
@@ -31,11 +31,12 @@ export default function SignUpForm({ onSignUp }) {
   const handleGoogleSignIn = async () => {
     try {
       await signInWithGoogle();
+      // Handle successful Google sign in
+      console.log("User signed in with Google successfully");
     } catch (error) {
       console.error("Error signing in with Google", error);
     }
   };
-
   return (
     <form className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4" onSubmit={handleSubmit}>
       <div className="mb-4">

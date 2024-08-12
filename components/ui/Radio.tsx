@@ -4,13 +4,16 @@ export function RadioGroup({ children, value, onValueChange, className, ...props
   return (
     <div className={`space-y-2 ${className}`} {...props}>
       {React.Children.map(children, child =>
-        React.cloneElement(child, { checked: child.props.value === value, onChange: () => onValueChange(child.props.value) })
+        React.cloneElement(child, { 
+          checked: child.props.value === value, 
+          onChange: () => onValueChange(child.props.value)
+        })
       )}
     </div>
   );
 }
 
-export function RadioGroupItem({ children, value, checked, onChange, className, ...props }: any) {
+export function RadioGroupItem({ value, checked, onChange, children, className, ...props }: any) {
   return (
     <label className={`flex items-center space-x-2 cursor-pointer ${className}`}>
       <input

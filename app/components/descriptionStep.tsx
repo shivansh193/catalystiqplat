@@ -5,6 +5,10 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { RadioGroup, RadioGroupItem } from '@/components/ui/Radio'
+import { useFirestore } from '../../lib/hooks/useFirestore'
+import { useAuth } from '../../lib/hooks/useAuth'
+import { User } from 'firebase/auth';
+
 
 const workTypes = [
   { name: 'Marketing', color: 'bg-blue-500' },
@@ -16,17 +20,41 @@ const workTypes = [
 
 export default function DescriptionStep({ formData, setFormData }: { formData: any, setFormData: (data: any) => void }) {
   const [selectedWorkTypes, setSelectedWorkTypes] = useState<string[]>(formData.workTypes || []);
+  const { handleSaveTask, loading, error } = useFirestore();
+  const { user } = useAuth() as { user: User | null };  
 
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    if (!user) {
+      console.error("No user logged in")
+      return;
+    }
+    const taskData = {
+      ...formData,
+      userId: user.uid,
+      createdAt: new Date()
+    }
+    try {
+      const taskId = await handleSaveTask(taskData);
+      if (taskId) {
+        console.log("Task saved successfully with ID:", taskId);
+        // You might want to add some success feedback to the user here
+      }
+    } catch (error) {
+      console.error("Error saving task:", error);
+      // You might want to add some error feedback to the user here
+    }
+  }
   const toggleWorkType = (workType: string) => {
-    setSelectedWorkTypes(prev => 
-      prev.includes(workType) 
-        ? prev.filter(type => type !== workType)
-        : [...prev, workType]
-    );
-    setFormData({...formData, workTypes: selectedWorkTypes});
+    const updatedWorkTypes = selectedWorkTypes.includes(workType) 
+      ? selectedWorkTypes.filter(type => type !== workType)
+      : [...selectedWorkTypes, workType];
+    setSelectedWorkTypes(updatedWorkTypes);
+    setFormData({...formData, workTypes: updatedWorkTypes});
   }
 
   return (
+    <form onSubmit={handleSubmit}>
     <div className="space-y-4">
       <Input
         type="text"
@@ -66,21 +94,25 @@ export default function DescriptionStep({ formData, setFormData }: { formData: a
       </div>
       
       <div className="space-y-2">
-        <Label>Task Type:</Label>
-        <RadioGroup 
-          value={formData.isAIOnly ? "ai" : "regular"} 
-          onValueChange={(value: any) => setFormData({...formData, isAIOnly: value === "ai"})}
-        >
-          <div className="flex items-center space-x-2">
-            <RadioGroupItem value="regular" id="regular" />
-            <Label htmlFor="regular">Regular Task</Label>
-          </div>
-          <div className="flex items-center space-x-2">
-            <RadioGroupItem value="ai" id="ai" />
-            <Label htmlFor="ai">AI-Only Task (Prompting)</Label>
-          </div>
-        </RadioGroup>
-      </div>
+  <Label>Task Type:</Label>
+  <RadioGroup 
+    value={formData.isAIOnly ? "ai" : "regular"} 
+    onValueChange={(value: "ai" | "regular") => setFormData({...formData, isAIOnly: value === "ai"})}
+  >
+    <RadioGroupItem value="regular" id="regular">
+      Regular Task
+    </RadioGroupItem>
+    <RadioGroupItem value="ai" id="ai">
+      AI-Only Task (Prompting)
+    </RadioGroupItem>
+  </RadioGroup>
+</div>
+
     </div>
+    <Button type="submit" disabled={loading} >
+        {loading ? 'Saving...' : 'Save Task'}
+      </Button>
+      {error && <p className="text-red-500">{error}</p>}
+    </form>
   );
 }

@@ -18,10 +18,11 @@ export default function OrganisationTask({ formData, setFormData }: { formData: 
     const generateAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY!)
 
     useEffect(() => {
+        const completedSubtasks = suggestedTasks.filter(task => task.completed)
         setFormData({
             ...formData,
             taskName: task,
-            subtasks: suggestedTasks
+            subtasks: completedSubtasks
         })
     }, [task, suggestedTasks])
 
