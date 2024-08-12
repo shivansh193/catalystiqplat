@@ -78,7 +78,7 @@ export default function Landing() {
                 <div className="rounded-md border bg-primary p-4 shadow-sm">
                     <blockquote className="space-y-2">
                     <p className="text-muted-foreground">
-                        "CatalystIQ has dramatically improved our hiring process. We now find the right talent faster and with much more confidence in their abilities."
+                    &quot;CatalystIQ has dramatically improved our hiring process. We now find the right talent faster and with much more confidence in their abilities.&quot;
                     </p>
                     <p className="text-sm font-medium">- Sarah Johnson, HR Director at TechInnovate</p>
                     </blockquote>
@@ -86,7 +86,7 @@ export default function Landing() {
                 <div className="rounded-md border bg-primary p-4 shadow-sm">
                     <blockquote className="space-y-2">
                     <p className="text-muted-foreground">
-                        "As a freelancer, CatalystIQ has been a game-changer. I can now showcase my skills directly and land projects that truly match my expertise."
+                    &quot;As a freelancer, CatalystIQ has been a game-changer. I can now showcase my skills directly and land projects that truly match my expertise.&quot;
                     </p>
                     <p className="text-sm font-medium">- Michael Chen, Independent Web Developer</p>
                     </blockquote>
@@ -106,13 +106,13 @@ return sections[activeSection] || null
       <div className="flex flex-col items-center justify-center bg-muted p-8 md:p-12 lg:p-16 flex-1"> {/* Centered content */}
         <h2 className="text-4xl font-bold tracking-tight">Welcome to CatalystIQ</h2>
         <div className="mt-8 flex flex-col gap-4 sm:flex-row">
-          <Button onClick={() => setActiveSection("clients")} className="w-full sm:w-auto">
+          <Button onClick={() => setActiveSection("clients")} className="w-full sm:w-auto text-xl p-4">
             Client
           </Button>
-          <Button onClick={() => setActiveSection("freelancers")} className="w-full sm:w-auto">
+          {/* <Button onClick={() => setActiveSection("freelancers")} className="w-full sm:w-auto">
             Freelancer
-          </Button>
-          <Button onClick={() => setActiveSection("about")} className="w-full sm:w-auto">
+          </Button> */}
+          <Button onClick={() => setActiveSection("about")} className="w-full sm:w-auto text-xl p-4">
             About
           </Button>
         </div>

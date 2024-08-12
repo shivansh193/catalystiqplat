@@ -1,4 +1,6 @@
-export const firebaseConfig= {
+import { FirebaseOptions } from "firebase/app";
+
+export const firebaseConfig: FirebaseOptions = {
     apiKey: "AIzaSyBf1BdiywSl3O3KeEYK8QmfHYqHdOk7iIc",
     authDomain: "catalystiq-bf577.firebaseapp.com",
     databaseURL: "https://catalystiq-bf577-default-rtdb.asia-southeast1.firebasedatabase.app",
