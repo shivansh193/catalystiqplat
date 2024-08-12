@@ -5,6 +5,9 @@ export const Hero = () => {
   const handleClientPlatClick=()=>{
     router.push('/clientlogin')
   }
+  const handleOrgPlatClick=()=>{
+    
+  }
 
   return (
     <>
