@@ -3,7 +3,13 @@
 import { useState } from 'react';
 import { registerWithEmail, signInWithGoogle } from '../../lib/firebase/auth';
 
-export default function SignUpForm({ onSignUp }: { onSignUp: (formData: any) => void }) {
+// Define the props type
+type SignUpFormProps = {
+  onSignUp: (formData: { username: string; email: string; password: string }) => void;
+};
+
+export default function SignUpForm({ onSignUp }: SignUpFormProps) {
+
   const [formData, setFormData] = useState({
     username: '',
     email: '',
