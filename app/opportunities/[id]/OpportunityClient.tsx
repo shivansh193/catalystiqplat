@@ -38,7 +38,8 @@ const ListingClient = () => {
     const fetchOpportunity = async () => {
       if (id) {
         try {
-          const db = getFirestore(app);
+          const db = app ? getFirestore(app) : null; // Check if app is defined
+          if (!db) throw new Error('Firebase app is not initialized'); // Handle the case where app is undefined
           const docRef = doc(db, 'tasks', id as string);
           const docSnap = await getDoc(docRef);
 
