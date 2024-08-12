@@ -9,12 +9,11 @@ import { app } from '../../../../lib/firebase/initFirebase';
 import { getStorage, ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import sdk from '@stackblitz/sdk';
 import { javascriptProject } from './javascriptTemplate';
-import { FirebaseApp } from 'firebase/app';
 
 const OpportunityApply = ({ params }: any) => {
   const { id } = params;
   const router = useRouter();
-  const auth = getAuth(app as FirebaseApp);
+  const auth = getAuth(app);
   const user = auth.currentUser;
 
   const [opportunityCategory, setOpportunityCategory] = useState<string[]>([]);
@@ -28,10 +27,11 @@ const OpportunityApply = ({ params }: any) => {
 
   useEffect(() => {
     const fetchOpportunityDetails = async () => {
+      if (!app) return; // Add this line
       const db = getFirestore(app);
       const docRef = doc(db, 'tasks', id);
       const docSnap = await getDoc(docRef);
-      
+
       if (docSnap.exists()) {
         const data = docSnap.data();
         setOpportunityCategory(data.workTypes || []);
@@ -78,10 +78,14 @@ const OpportunityApply = ({ params }: any) => {
   
     setSubmitting(true);
   
-    const db = getFirestore(app);
-    const storage = getStorage(app);
-    const docRef = doc(db, 'tasks', id as string);
-  
+    if (!app) {
+    console.error('Firebase app is not initialized');
+    return;
+  }
+
+  const db = getFirestore(app);
+  const storage = getStorage(app);
+  const docRef = doc(db, 'tasks', id as string);
     let designUrl = '';
   
     try {
