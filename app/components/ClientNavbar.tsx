@@ -18,7 +18,7 @@ const IntegratedNavbar = () => {
   const { theme } = useTheme();
 
   useEffect(() => {
-    const auth = getAuth(app);
+    const auth = getAuth(app as FirebaseApp);
     console.log("Current user on load:", auth.currentUser);
 
     const unsubscribe = auth.onAuthStateChanged((user) => {
@@ -26,13 +26,6 @@ const IntegratedNavbar = () => {
       setUser(user);
       setLoading(false);
     });
-
-    return () => unsubscribe();
-  }, []);
-
-  const toggleMenu = () => {
-    setIsMenuOpen(!isMenuOpen);
-  };
 
     return () => unsubscribe();
   }, []);
