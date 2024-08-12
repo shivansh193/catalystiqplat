@@ -12,8 +12,8 @@ interface ProjectHistoryProps {
 }
 
 export default function ProjectHistory({ tasks }: ProjectHistoryProps) {
-  const projectTypes = [...new Set(tasks.map(task => task.workTypes).flat())];
-
+  const projectTypes = Array.from(new Set(tasks.map(task => task.workTypes).flat()));
+  
   return (
     <Card className="mb-6">
       <CardHeader>
