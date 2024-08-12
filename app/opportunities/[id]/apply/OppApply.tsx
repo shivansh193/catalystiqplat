@@ -15,10 +15,11 @@ const OpportunityApply = ({ params }: any) => {
   const router = useRouter();
   const auth = getAuth(app);
   const user = auth.currentUser;
+  
 
   const [opportunityCategory, setOpportunityCategory] = useState<string[]>([]);
   const [isAIOnly, setIsAIOnly] = useState(false);
-  const [chatHistory, setChatHistory] = useState([]);
+  const [chatHistory, setChatHistory] = useState<any[]>([]);
   const [textSubmission, setTextSubmission] = useState('');
   const [designFile, setDesignFile] = useState<File | null>(null);
   const [submitting, setSubmitting] = useState(false);
