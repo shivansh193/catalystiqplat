@@ -4,18 +4,34 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { useFirestore } from '@/lib/hooks/useFirestore';
 
-export default function ActiveOpportunities({ tasks, onUpdate }) {
-  const [editingTask, setEditingTask] = useState(null);
+// Define the shape of a task
+interface Task {
+  id: string;
+  taskName: string;
+  closed: boolean;
+  // Add other properties of task as needed
+}
+
+// Define the props for the component
+interface ActiveOpportunitiesProps {
+  tasks: Task[];
+  onUpdate: () => void;
+}
+
+export default function ActiveOpportunities({ tasks, onUpdate }: ActiveOpportunitiesProps) {
+  const [editingTask, setEditingTask] = useState<Task | null>(null);
   const { handleUpdateTask } = useFirestore();
 
-  const handleEdit = (task) => {
+  const handleEdit = (task: Task) => {
     setEditingTask({ ...task });
   };
 
   const handleSave = async () => {
-    await handleUpdateTask(editingTask.id, editingTask);
-    setEditingTask(null);
-    onUpdate();
+    if (editingTask) {
+      await handleUpdateTask(editingTask.id, editingTask);
+      setEditingTask(null);
+      onUpdate();
+    }
   };
 
   return (
