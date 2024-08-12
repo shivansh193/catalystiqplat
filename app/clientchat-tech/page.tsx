@@ -16,7 +16,7 @@ export interface ChatTechProps {
   setChatHistory: React.Dispatch<React.SetStateAction<ChatMessage[]>>;
 }
 
-const ClientChatTech: React.FC<ChatTechProps> = ({ chatHistory, setChatHistory }) => {
+export default function ClientChatTech({ chatHistory, setChatHistory }: ChatTechProps) {
   const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY || '');
   
   const [response, setResponse] = useState('');
@@ -151,4 +151,3 @@ const ClientChatTech: React.FC<ChatTechProps> = ({ chatHistory, setChatHistory }
   );
 };
 
-export default ClientChatTech;
