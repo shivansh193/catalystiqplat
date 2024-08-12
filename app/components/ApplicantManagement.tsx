@@ -12,19 +12,22 @@ export default function ApplicantManagement({ tasks, onUpdate }) {
       ...selectedTask,
       closed: true,
       approvedApplicant: applicantId,
+      applications: selectedTask.applications.map(app => 
+        app.userId === applicantId ? { ...app, approved: true } : app // Mark the approved applicant
+      ),
     };
     await handleUpdateTask(taskId, updatedTask);
     onUpdate();
-  };
+};
 
-  const handleReject = async (taskId, applicantId) => {
+const handleReject = async (taskId, applicantId) => {
     const updatedTask = {
       ...selectedTask,
-      applications: selectedTask.applications.filter(app => app.userId !== applicantId),
+      applications: selectedTask.applications.filter(app => app.userId !== applicantId), // Remove rejected applicant
     };
     await handleUpdateTask(taskId, updatedTask);
     onUpdate();
-  };
+};
 
   const sendSelectionEmail = (applicant) => {
     // Implement email sending logic here
@@ -48,7 +51,7 @@ export default function ApplicantManagement({ tasks, onUpdate }) {
             <h3>Applicants for {selectedTask.taskName}</h3>
             {selectedTask.applications.map((applicant) => (
               <div key={applicant.userId}>
-                <p>{applicant.name} - {applicant.email}</p>
+                <p>{applicant.text} - {applicant.stackBlitzLink}</p>
                 <Button onClick={() => handleApprove(selectedTask.id, applicant.userId)}>Approve</Button>
                 <Button onClick={() => handleReject(selectedTask.id, applicant.userId)}>Reject</Button>
                 {selectedTask.approvedApplicant === applicant.userId && (

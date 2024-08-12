@@ -106,13 +106,13 @@ return sections[activeSection] || null
       <div className="flex flex-col items-center justify-center bg-muted p-8 md:p-12 lg:p-16 flex-1"> {/* Centered content */}
         <h2 className="text-4xl font-bold tracking-tight">Welcome to CatalystIQ</h2>
         <div className="mt-8 flex flex-col gap-4 sm:flex-row">
-          <Button onClick={() => setActiveSection("clients")} className="w-full sm:w-auto">
+          <Button onClick={() => setActiveSection("clients")} className="w-full sm:w-auto text-xl p-4">
             Client
           </Button>
-          <Button onClick={() => setActiveSection("freelancers")} className="w-full sm:w-auto">
+          {/* <Button onClick={() => setActiveSection("freelancers")} className="w-full sm:w-auto">
             Freelancer
-          </Button>
-          <Button onClick={() => setActiveSection("about")} className="w-full sm:w-auto">
+          </Button> */}
+          <Button onClick={() => setActiveSection("about")} className="w-full sm:w-auto text-xl p-4">
             About
           </Button>
         </div>
