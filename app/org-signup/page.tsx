@@ -184,7 +184,7 @@ export default function OrgSignup() {
               onChange={handleInputChange}
               className="w-full px-3 py-2 border rounded"
             >
-              <option value="">Select Signer's Role</option>
+              <option value="">Select Signer&apos;s Role</option>
               <option value="CEO">CEO</option>
               <option value="CTO">CTO</option>
               <option value="HR Manager">HR Manager</option>

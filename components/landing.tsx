@@ -78,7 +78,7 @@ export default function Landing() {
                 <div className="rounded-md border bg-primary p-4 shadow-sm">
                     <blockquote className="space-y-2">
                     <p className="text-muted-foreground">
-                        "CatalystIQ has dramatically improved our hiring process. We now find the right talent faster and with much more confidence in their abilities."
+                    &quot;CatalystIQ has dramatically improved our hiring process. We now find the right talent faster and with much more confidence in their abilities.&quot;
                     </p>
                     <p className="text-sm font-medium">- Sarah Johnson, HR Director at TechInnovate</p>
                     </blockquote>
@@ -86,7 +86,7 @@ export default function Landing() {
                 <div className="rounded-md border bg-primary p-4 shadow-sm">
                     <blockquote className="space-y-2">
                     <p className="text-muted-foreground">
-                        "As a freelancer, CatalystIQ has been a game-changer. I can now showcase my skills directly and land projects that truly match my expertise."
+                    &quot;As a freelancer, CatalystIQ has been a game-changer. I can now showcase my skills directly and land projects that truly match my expertise.&quot;
                     </p>
                     <p className="text-sm font-medium">- Michael Chen, Independent Web Developer</p>
                     </blockquote>
