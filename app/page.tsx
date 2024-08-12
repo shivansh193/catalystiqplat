@@ -28,12 +28,7 @@ const LandingPage = () => {
         <div className="relative">
           <div className="z-0"><RetroGrid /></div>
           <div className="z-10">
-            <button
-              className="bg-blue-500 text-white py-2 px-4 rounded-lg shadow-md hover:bg-blue-600 transition duration-200"
-              onClick={handleClientPlatClick}
-            >
-              Client Plat &rarr;
-            </button>
+            
             <Footer />
           </div>
         </div>

@@ -18,14 +18,14 @@ export default function Landing() {
                 </p>
                 <div className="flex flex-col gap-4 sm:flex-row">
                 <Link
-                    href="#"
+                    href="/orgtask"
                     className="inline-flex h-10 items-center justify-center rounded-md bg-primary-foreground px-6 text-sm font-medium text-primary shadow transition-colors hover:bg-primary-foreground/90 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50"
                     prefetch={false}
                 >
                     Post a Project
                 </Link>
                 <Link
-                    href="#"
+                    href="/about"
                     className="inline-flex h-10 items-center justify-center rounded-md border border-input bg-primary text-primary-foreground px-6 text-sm font-medium shadow-sm transition-colors hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50"
                     prefetch={false}
                 >
