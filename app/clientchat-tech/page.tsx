@@ -10,24 +10,20 @@ interface ChatMessage {
   role: 'user' | 'assistant';
   content: string;
 }
+
 export interface ChatTechProps {
-  chatHistory: any[];
-  setChatHistory: React.Dispatch<React.SetStateAction<any[]>>;
+  chatHistory: ChatMessage[];
+  setChatHistory: React.Dispatch<React.SetStateAction<ChatMessage[]>>;
 }
 
-const ClientChatTech: React.FC<ChatTechProps> = ({ chatHistory, setChatHistory}: any) => {
-  
+const ClientChatTech: React.FC<ChatTechProps> = ({ chatHistory, setChatHistory }) => {
   const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY || '');
   
   const [response, setResponse] = useState('');
   const [currentPrompt, setCurrentPrompt] = useState('');
-  const prompt=`You are an AI Agent designed to fit into various hats as an assistant, You are extremely profiecient in all fields, YOU ARE DESIGNED BY CATALYSTIQ
-  Which is an AI Freelancers platform helping freelancers get the right role, you are supposed to help the users in whatever they need help for. 
-  At times you will be given a prompt to generate code, IN CASE OF CODE, cover the CODE IN BETWEEN SEMI COLONS":"
-  cover the bolded portions(which are the important parts of a response) in a asteriks "*" and send the remaining response as normal text. Your current prompt on what you have to assist the user to do is ${currentPrompt}
-  `
+  const prompt = `You are an AI Agent designed to fit into various hats as an assistant... Your current prompt on what you have to assist the user to do is ${currentPrompt}`;
   const [isDarkMode, setIsDarkMode] = useState(false);
-  
+
   useEffect(() => {
     if (isDarkMode) {
       document.documentElement.classList.add('dark');
@@ -35,13 +31,13 @@ const ClientChatTech: React.FC<ChatTechProps> = ({ chatHistory, setChatHistory}:
       document.documentElement.classList.remove('dark');
     }
   }, [isDarkMode]);
-  
-  async function handleSubmit(e: any) {
+
+  async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     const model = genAI.getGenerativeModel({ model: 'gemini-1.5-flash' });
-    
-    const userMessage: ChatMessage= { role: 'user', content: currentPrompt };
-    setChatHistory((prevHistory: any) => [...prevHistory, userMessage]);
+
+    const userMessage: ChatMessage = { role: 'user', content: currentPrompt };
+    setChatHistory((prevHistory) => [...prevHistory, userMessage]);
 
     const fullPrompt = [...chatHistory, userMessage]
       .map(msg => `${msg.role}: ${msg.content}`)
@@ -49,31 +45,31 @@ const ClientChatTech: React.FC<ChatTechProps> = ({ chatHistory, setChatHistory}:
 
     const result = await model.generateContent(fullPrompt);
     const text = await result.response.text();
-    
-    const aiMessage: ChatMessage= { role: 'assistant', content: text };
-    setChatHistory((prevHistory: any) => [...prevHistory, aiMessage]);
-    
+
+    const aiMessage: ChatMessage = { role: 'assistant', content: text };
+    setChatHistory((prevHistory) => [...prevHistory, aiMessage]);
+
     setResponse(text);
     setCurrentPrompt('');
   }
-  
+
   function clearChat() {
     setChatHistory([]);
     setResponse('');
     setCurrentPrompt('');
   }
-  
-  const copyToClipboard = (text: any) => {
+
+  const copyToClipboard = (text: string) => {
     navigator.clipboard.writeText(text).then(() => {
       alert('Code copied to clipboard!');
     });
   };
-  
-  const CodeBlock = ({node, inline, className, children, ...props}: any) => {
+
+  const CodeBlock = ({ node, inline, className, children, ...props }: any) => {
     const match = /language-(\w+)/.exec(className || '');
     const language = match ? match[1] : '';
     const code = String(children).replace(/\n$/, '');
-    
+
     if (!inline) {
       return (
         <div className="relative">
@@ -116,7 +112,7 @@ const ClientChatTech: React.FC<ChatTechProps> = ({ chatHistory, setChatHistory}:
       </div>
       <div className="w-full max-w-md bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
         <div className="mb-4 max-h-96 overflow-y-auto">
-          {chatHistory.map((message: any, index: any) => (
+          {chatHistory.map((message, index) => (
             <div key={index} className={`mt-4 ${message.role === 'user' ? 'text-right' : 'text-left'}`}>
               <div className={`inline-block p-2 rounded-lg ${message.role === 'user' ? 'bg-blue-500 text-white' : 'bg-gray-200 dark:bg-gray-700'}`}>
                 <ReactMarkdown 
@@ -156,8 +152,3 @@ const ClientChatTech: React.FC<ChatTechProps> = ({ chatHistory, setChatHistory}:
 };
 
 export default ClientChatTech;
-// `You are an AI Agent designed to fit into various hats as an assistant, You are extremely profiecient in all fields, YOU ARE DESIGNED BY CATALYSTIQ
-//   Which is an AI Freelancers platform helping freelancers get the right role, you are supposed to help the users in whatever they need help for. 
-//   At times you will be given a prompt to generate code, IN CASE OF CODE, cover the CODE IN BETWEEN SEMI COLONS":"
-//   cover the bolded portions(which are the important parts of a response) in a asteriks "*" and send the remaining response as normal text. Your current prompt on what you have to assist the user to do is ${currentPrompt}
-//   `
