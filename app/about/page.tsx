@@ -10,7 +10,7 @@ const AboutUs = () => {
         <section className="mb-12">
           <h2 className="text-2xl font-semibold mb-4 text-gray-800 dark:text-gray-200">Our Mission</h2>
           <p className="text-gray-600 dark:text-gray-300">
-            At CatalystIQHub, we're revolutionizing the freelancing landscape by seamlessly integrating AI capabilities with human expertise. Our mission is to empower freelancers and businesses alike, creating a dynamic ecosystem where innovation thrives and quality work is consistently delivered.
+            At CatalystIQHub, we&apos;re revolutionizing the freelancing landscape by seamlessly integrating AI capabilities with human expertise. Our mission is to empower freelancers and businesses alike, creating a dynamic ecosystem where innovation thrives and quality work is consistently delivered.
           </p>
         </section>
 
@@ -30,7 +30,7 @@ const AboutUs = () => {
           <div className="grid md:grid-cols-3 gap-6">
             <div className="bg-white dark:bg-gray-800 p-4 rounded-lg shadow">
               <h3 className="text-xl font-medium mb-2 text-gray-800 dark:text-gray-200">Innovation</h3>
-              <p className="text-gray-600 dark:text-gray-300">We constantly push the boundaries of what's possible in the freelancing world.</p>
+              <p className="text-gray-600 dark:text-gray-300">We constantly push the boundaries of what&apos;s possible in the freelancing world.</p>
             </div>
             <div className="bg-white dark:bg-gray-800 p-4 rounded-lg shadow">
               <h3 className="text-xl font-medium mb-2 text-gray-800 dark:text-gray-200">Integrity</h3>
@@ -46,7 +46,7 @@ const AboutUs = () => {
         <section>
           <h2 className="text-2xl font-semibold mb-4 text-gray-800 dark:text-gray-200">Join Us</h2>
           <p className="text-gray-600 dark:text-gray-300 mb-4">
-            Whether you're a talented freelancer looking for exciting projects or a business seeking top-notch expertise, CatalystIQHub is here to catalyze your success. Join our community today and experience the future of AI-enhanced freelancing.
+            Whether you&apos;re a talented freelancer looking for exciting projects or a business seeking top-notch expertise, CatalystIQHub is here to catalyze your success. Join our community today and experience the future of AI-enhanced freelancing.
           </p>
           <button className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
             Get Started
