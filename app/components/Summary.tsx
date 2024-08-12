@@ -1,7 +1,7 @@
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 
-export default function FinancialSummary({ tasks }) {
-  const totalBudget = tasks.reduce((sum, task) => sum + parseFloat(task.budget), 0);
+export default function FinancialSummary({ tasks }: any) {
+  const totalBudget = tasks.reduce((sum: any, task: any) => sum + parseFloat(task.budget), 0);
 
   return (
     <Card className="mb-6">
