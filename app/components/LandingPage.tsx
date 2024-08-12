@@ -16,7 +16,7 @@ export default function Home() {
     const user = localStorage.getItem('user');
     if (user) {
       setIsLoggedIn(true);
-      router.push('/clientPage');
+      router.push('/LandingPage');
     }
   }, [router]);
 
