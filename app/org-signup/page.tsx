@@ -42,7 +42,8 @@ export default function OrgSignup() {
 
   const uploadToFirestore = async (data: any) => {
     try {
-      const db = getFirestore(app);
+      const db = getFirestore(app!); // Use non-null assertion operator
+      // ... existing code ...
       const docRef = await addDoc(collection(db, 'orgs'), data);
       console.log("Document written with ID: ", docRef.id);
       return docRef.id;

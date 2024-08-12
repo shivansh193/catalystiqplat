@@ -14,7 +14,12 @@ import Link from 'next/link'; // Import Link for navigation
 export default function OrgDashboard() {
   const { user } = useAuth();
   const { handleGetTasks, loading, error } = useFirestore();
-  const [tasks, setTasks] = useState([]);
+  const [tasks, setTasks] = useState<{ id: number; taskName: string }[]>([]); // Updated type to include taskName
+
+  const fetchTasks = async () => {
+    const fetchedTasks = await handleGetTasks(user.uid);
+    setTasks(fetchedTasks.map(task => ({ id: Number(task.id), taskName: task.taskName }))); // Ensure fetched tasks match the expected type
+  };
 
   useEffect(() => {
     if (user) {
@@ -22,10 +27,6 @@ export default function OrgDashboard() {
     }
   }, [user]);
 
-  const fetchTasks = async () => {
-    const fetchedTasks = await handleGetTasks(user.uid);
-    setTasks(fetchedTasks);
-  };
 
   if (loading) return <div>Loading...</div>;
   if (error) return <div>Error: {error}</div>;
